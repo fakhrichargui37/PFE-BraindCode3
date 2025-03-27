@@ -22,9 +22,11 @@
               </svg>
             </div>
             <input
+              v-model="searchQuery"
               class="peer h-full w-full outline-none text-sm text-gray-700 pr-2 border-0 focus:ring-0"
               type="text"
               placeholder="Rechercher une formation..."
+              @input="searchFormations"
             />
           </div>
         </div>
@@ -142,10 +144,10 @@
 </template>
   
 <script setup lang="ts">
-import { Link, usePage } from '@inertiajs/vue3';
+import { Link, usePage, router } from '@inertiajs/vue3';
 import { Head } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 // Définir le type User
 interface User {
@@ -173,9 +175,19 @@ interface Formation {
   modules?: any[];
 }
 
-defineProps<{
+// Define props
+const props = defineProps<{
   formations: Formation[];
 }>();
+
+// Search functionality
+const searchQuery = ref("");
+
+const searchFormations = async () => {
+  await router.get("/formations", {
+    search: searchQuery.value,
+  }, { preserveState: true });
+};
 
 // Accéder à l'objet route() d'Inertia
 const page = usePage<PageProps>();

@@ -8,7 +8,7 @@ import Elearning from '@/Pages/Elearning.vue';
     <Head title="Dashboard" />
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-black dark:text-gray-200">
+            <h2 class="text-2xl font-bold text-black dark:text-black">
                 Dashboard
             </h2>
         </template>

@@ -5,7 +5,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 const selectedRole = ref('user');
 
@@ -36,11 +36,21 @@ const selectRole = (role) => {
     form.role = role;
 };
 
+// Reset role-specific fields when role changes
+watch(() => form.role, () => {
+    form.startup_name = '';
+    form.code_fiscal = '';
+    form.startup_email = '';
+    form.startup_phone = '';
+    form.speciality = '';
+    form.description = '';
+});
+
 const roleOptions = [
     { 
         value: 'user', 
         label: 'Utilisateur individuel', 
-        description: 'Compte personnel pour lapprentissage et le réseautage',
+        description: 'Compte personnel pour l\'apprentissage et le réseautage',
         icon: `
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
@@ -78,7 +88,7 @@ const roleOptions = [
             <!-- Role Selection -->
             <div class="mb-8">
                 <h2 class="text-2xl font-bold text-center text-white mb-6">Choisissez votre type de compte</h2>
-                <div class="grid grid-cols-3 gap-4">
+                <div class="grid grid-cols-3 gap-6">
                     <div 
                         v-for="role in roleOptions" 
                         :key="role.value" 
@@ -86,14 +96,14 @@ const roleOptions = [
                         class="cursor-pointer group transition-all duration-300 transform hover:scale-105 text-center"
                     >
                         <div 
-                            class="p-4 rounded-xl transition-all duration-300 flex flex-col items-center justify-center space-y-3 border-2"
+                            class="p-6 rounded-xl transition-all duration-300 flex flex-col items-center justify-center space-y-4 border-2 shadow-lg"
                             :class="{
                                 'bg-blue-500/20 border-blue-500': form.role === role.value,
                                 'bg-white/10 border-transparent hover:bg-white/20 hover:border-white/30': form.role !== role.value
                             }"
                         >
                             <div 
-                                class="w-16 h-16 flex items-center justify-center rounded-full transition-all duration-300"
+                                class="w-20 h-20 flex items-center justify-center rounded-full transition-all duration-300"
                                 :class="{
                                     'bg-blue-500/20': form.role === role.value,
                                     'bg-white/10 group-hover:bg-white/20': form.role !== role.value
@@ -101,16 +111,16 @@ const roleOptions = [
                             >
                                 <div 
                                     v-html="role.icon"
-                                    class="w-10 h-10 transition-all duration-300"
+                                    class="w-12 h-12 transition-all duration-300"
                                     :class="{
                                         'text-blue-500': form.role === role.value,
                                         'text-white/70 group-hover:text-white': form.role !== role.value
                                     }"
                                 ></div>
                             </div>
-                            <div>
+                            <div class="space-y-2">
                                 <h3 
-                                    class="font-semibold text-sm transition-colors duration-300"
+                                    class="font-semibold text-base transition-colors duration-300"
                                     :class="{
                                         'text-blue-500': form.role === role.value,
                                         'text-white/70 group-hover:text-white': form.role !== role.value
@@ -119,7 +129,7 @@ const roleOptions = [
                                     {{ role.label }}
                                 </h3>
                                 <p 
-                                    class="text-xs text-center mt-1 transition-colors duration-300"
+                                    class="text-sm text-center transition-colors duration-300"
                                     :class="{
                                         'text-blue-300': form.role === role.value,
                                         'text-white/50 group-hover:text-white/70': form.role !== role.value

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
@@ -27,7 +27,6 @@ const toggleSidebar = () => {
   }
 };
 
-// Existing component logic remains the same as previous implementation
 const filterFormations = async () => {
   if (selectedCategory.value !== "") {
     await router.get("/formationscat", {
@@ -46,22 +45,6 @@ const props = defineProps({
     default: () => [],
   }
 });
-
-const searchQuery = ref("");
-const formations = ref(props.formations); 
-
-watch(
-  () => props.formations,
-  (newFormations) => {
-    formations.value = newFormations || [];
-  }
-);
-
-const searchFormations = async () => {
-  await router.get("/formations", {
-    search: searchQuery.value,
-  }, { preserveState: true });
-};
 
 const categories = ref([]);
 const selectedCategory = ref("");
@@ -97,7 +80,7 @@ const logout = async () => {
 </script>
 
 <template>
-  <div class="flex relative">
+  <div class="flex w-screen h-screen overflow-hidden">
     <!-- Sidebar Toggle Button -->
     <button 
       @click="toggleSidebar" 
@@ -130,21 +113,11 @@ const logout = async () => {
       }"
     >
       <div class="relative h-full w-72 bg-[#1e2433] text-white p-6 overflow-y-auto">
+        <!-- Sidebar content remains the same -->
         <div class="flex items-center mb-6">
           <Link :href="route('dashboard')" class="text-xl font-bold">
             <ApplicationLogo class="block h-9 w-auto fill-current text-gray-200" />
           </Link>
-        </div>
-
-        <!-- Search Bar -->
-        <div class="mb-4">
-          <input 
-            v-model="searchQuery"
-            type="text"
-            placeholder="Search Formations"
-            class="w-full px-4 py-2 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            @input="searchFormations"
-          />
         </div>
 
         <!-- Categories Dropdown -->
@@ -265,14 +238,14 @@ const logout = async () => {
 
     <!-- Main Content -->
     <div 
-      class="main-content transition-all duration-300 ease-in-out"
+      class="flex-1 flex flex-col overflow-hidden transition-all duration-300 ease-in-out"
       :class="{
         'ml-72': isSidebarOpen,
         'ml-0': !isSidebarOpen
       }"
     >
       <header 
-        class="sticky top-0 z-50 transition-all duration-300"
+        class="sticky top-0 z-50 bg-white shadow-sm transition-all duration-300"
         :class="{
           'pl-72': isSidebarOpen,
           'pl-0': !isSidebarOpen
@@ -281,7 +254,7 @@ const logout = async () => {
         <slot name="header" />
       </header>
 
-      <main class="p-6">
+      <main class="flex-1 overflow-y-auto p-6">
         <slot />
       </main>
     </div>
@@ -289,7 +262,6 @@ const logout = async () => {
 </template>
 
 <style scoped>
-/* Additional custom styles can be added here if needed */
 .sidebar-toggle-button {
   position: fixed;
   top: 1rem;
